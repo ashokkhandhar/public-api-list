@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='author' content='Ashok Khandhar'>
+    <meta name='description' content='Practice project'>
+    <meta name='keywords' content='NodeJS, EJS, HTML, CSS, JavaScript'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Public APIs</title>
+    <link rel='stylesheet' href='/style.css'>
+</head>
+<body>
+    <header>
+        <h1 class='heading'>Public APIs</h1>
+        <nav>
+            <select name="" id="categories">
+                <option value="" selected disabled>Select Category</option>
+                <option value="all">All</option>
+                <% for(let i = 0; i < categories.length; i++) { %>
+                    <option value="<%= categories[i] %>"><%= categories[i] %></option>
+                <% } %>
+            </select>
+            <a href="/random">Random</a>
+        </nav>
+    </header>
+    <main class='container'>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>API</th>
+                        <th>Description</th>
+                        <th>Auth</th>
+                        <th>HTTPS</th>
+                        <th>CORS</th>
+                    </tr>
+                </thead>
+                <tbody id="content">
+                    <!-- Content will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer class='copy-right'>
+        <span>© <%= new Date().getFullYear() %> Copyright</span>
+        <div class='divider'>|</div>
+        <div>
+            <a href='https://github.com/ashokkhandhar/public-api-list' target='_blank'>code</a> with ❤️ by <a href='http://ashokkhandhar.netlify.app/' target='_blank'>Ashok Khandhar</a>
+        </div>
+    </footer>
+    <script>
+        const options = document.getElementById("categories");
+        const container = document.getElementById("content");
+    
+        let initialContent = '';
+        '<% apis.forEach((api) => { %>'
+            initialContent += `
+                <tr>
+                    <td class="api-link"><a href="<%= api.Link %>"><%= api.API %></a></td>
+                    <td class="description"><%= api.Description %></td>
+                    <td class="auth"><%= api.Auth %></td>
+                    <td class="https"><%= api.HTTPS %></td>
+                    <td class="cors"><%= api.Cors %></td>
+                </tr>`;
+        '<% }); %>'
+        container.innerHTML = initialContent;
+    
+        // Event listener for category selection
+        options.addEventListener("change", (event) => {
+            const selectedCategory = event.target.value;
+            let updatedContent = '';
+            '<% apis.forEach((api) => { %>'
+                var category = decodeURIComponent('<%= encodeURIComponent(api.Category) %>');
+                if (category === selectedCategory || selectedCategory === 'all') {
+                    updatedContent += `
+                        <tr>
+                            <td class="api-link"><a href="<%= api.Link %>"><%= api.API %></a></td>
+                            <td class="description"><%= api.Description %></td>
+                            <td class="auth"><%= api.Auth %></td>
+                            <td class="https"><%= api.HTTPS %></td>
+                            <td class="cors"><%= api.Cors %></td>
+                        </tr>`;
+                }
+            '<% }); %>'
+            container.innerHTML = updatedContent;
+        });
+    </script>    
+</body>
+</html>
